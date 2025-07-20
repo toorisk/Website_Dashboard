@@ -47,7 +47,6 @@ function createTemperatureChart() {
     series: [{
       name: 'Sensor Suhu', // Label nama seri
       color: '#ff0000', // Warna merah untuk suhu
-      data : [],
       dataLabels: { 
         enabled: false // Menonaktifkan label data agar tidak terlalu padat
       },
@@ -67,7 +66,7 @@ function createTemperatureChart() {
       enabled: false // Sembunyikan kredit Highcharts
     },
     rangeSelector: {
-      enabled: true // Aktifkan range selector
+      enabled: false // Aktifkan range selector
     },
     navigator: {
       enabled: true // Aktifkan navigator

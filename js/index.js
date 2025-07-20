@@ -245,20 +245,24 @@ async function processSnapshotForCharts(snapshot, location) {
 
         // Hanya plot ke chart jika chart sudah diinisialisasi
         if (chartsInitialized) {
-            // Reset data chart sebelum menambahkan yang baru
-            if (chartT && chartT.series && chartT.series[0]) chartT.series[0].setData([]);
-            if (chartH && chartH.series && chartH.series[0]) chartH.series[0].setData([]);
-            if (chartP && chartP.series && chartP.series[0]) chartP.series[0].setData([]);
+
+            const tempSeries = [];
+            const turbidSeries = [];
+            const phSeries = [];
+
             filteredData.forEach(entry => {
-                plotValues(chartT, entry.timestamp, entry.temperature);
-                plotValues(chartH, entry.timestamp, entry.turbidity);
-                plotValues(chartP, entry.timestamp, entry.ph);
+                tempSeries.push([entry.timestamp, entry.temperature]);
+                turbidSeries.push([entry.timestamp, entry.turbidity]);
+                phSeries.push([entry.timestamp, entry.ph]);
             });
 
-            // Redraw chart setelah semua poin ditambahkan
-            if (chartT) chartT.redraw();
-            if (chartH) chartH.redraw();
-            if (chartP) chartP.redraw();
+            chartT.series[0].setData(tempSeries, false);
+            chartH.series[0].setData(turbidSeries, false);
+            chartP.series[0].setData(phSeries, false);
+
+            chartT.redraw();
+            chartH.redraw();
+            chartP.redraw();
         }
 
         const latestEntry = sortedData[sortedData.length - 1];
