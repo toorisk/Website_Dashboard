@@ -182,7 +182,7 @@ function processSnapshotForLiveValues(snapshot, location) {
 }
 
 function refreshChartManually() {
-    const uid = currentUserUid; // pastikan kamu punya variabel ini
+    const uid = currentUserUid;
     const location = currentDataLocation;
 
     const chartRefPath = `UsersData/${uid}/${location}/readings`;
@@ -208,10 +208,10 @@ document.getElementById('charts-dayrange').addEventListener('change', async () =
         chart.style.display = 'none';
         document.getElementById('loader').style.display = 'block';
         document.getElementById('loading-text').innerText = 'Memuat data...';
-        await wait(1000); // supaya terlihat ada loading
+        await wait(1000);
     }
 
-    refreshChartManually(); // panggil fungsi pembaruan chart
+    refreshChartManually();
 });
 
 // Memproses snapshot untuk chart (memuat data dalam rentang waktu)
@@ -229,8 +229,8 @@ async function processSnapshotForCharts(snapshot, location) {
         // Filter data berdasarkan rentang hari yang dipilih
         const daysToDisplay = parseFloat(document.getElementById('charts-dayrange').value);
         const now = new Date().getTime(); // Waktu sekarang dalam milidetik
-        const filterTime = now - (daysToDisplay * 24 * 60 * 60 * 1000); // Waktu batas bawah
-        console.log('Waktu batas bawah: ' + new Date(filterTime).toLocaleString('id-ID'));
+        const filterTime = now - (daysToDisplay * 24 * 60 * 60 * 1000);
+        
         const filteredData = sortedData.filter(entry => {
             return epochToJsDate(entry.timestamp).getTime() >= filterTime && epochToJsDate(entry.timestamp).getTime() <= now;
         });
