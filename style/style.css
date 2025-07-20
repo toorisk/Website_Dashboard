@@ -1,0 +1,461 @@
+html {
+    font-family: 'Inter', Verdana, Geneva, Tahoma, sans-serif; /* Menggunakan Inter jika tersedia, fallback ke Verdana */
+    display: inline-block;
+    text-align: center;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh; /* Pastikan body mengisi seluruh tinggi viewport */
+    display: flex; /* Menggunakan flexbox untuk layout utama */
+    flex-direction: column; /* Fleksibel secara kolom */
+}
+
+/* Warna-warna baru yang Anda terapkan */
+.topnav {
+    overflow: hidden;
+    background-color: #00ff08; /* Warna hijau utama */
+    color: white;
+    font-size: 1.2rem; /* Sedikit lebih besar */
+    padding: 10px 20px; /* Padding lebih baik */
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sedikit bayangan */
+}
+
+.topnav h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Jarak antara teks dan ikon */
+}
+
+#authentication-bar {
+    background-color: mintcream;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+#user-details {
+    color: #2c3e50; /* Warna lebih gelap untuk kontras */
+    font-weight: bold;
+}
+
+.allcontainer {
+    display: flex;
+    flex-grow: 1; /* Memungkinkan container mengisi sisa ruang vertikal */
+    flex-direction: row; /* Sidebar dan konten berdampingan */
+    width: 100%;
+}
+
+.sidebar {
+    width: 250px;
+    min-width: 200px; /* Batas lebar minimum */
+    background-color: #87ff8b; /* Warna hijau sidebar */
+    color: #2c3e50; /* Warna teks lebih gelap untuk kontras */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Bayangan ke kanan */
+    position: sticky; /* Sidebar tetap di tempatnya saat scroll */
+    top: 0;
+    height: 100vh; /* Mengisi tinggi viewport */
+    overflow-y: auto; /* Aktifkan scroll jika konten sidebar melebihi tinggi */
+}
+
+.sidebar a {
+    color: white; /* Warna teks putih untuk tombol */
+    text-decoration: none;
+    margin: 8px 0; /* Margin sedikit disesuaikan */
+    padding: 12px 15px; /* Padding lebih baik */
+    background-color: #34495e; /* Warna latar belakang tombol */
+    border-radius: 8px; /* Sudut lebih membulat */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transisi halus */
+}
+
+.sidebar a:hover {
+    background-color: #084044;
+    transform: translateY(-2px); /* Efek sedikit naik saat hover */
+}
+
+.sidebar a.active {
+    background-color: #084044; /* Warna untuk tombol navigasi yang aktif */
+    font-weight: bold;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2); /* Efek bayangan dalam untuk aktif */
+}
+
+.sidebar hr {
+    border-color: #34495e;
+    margin: 15px 0;
+}
+
+.sidebar div {
+    color: #2c3e50; /* Warna teks untuk "Pilih Lokasi" */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.radio-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 10px; /* Margin sedikit disesuaikan */
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #2c3e50; /* Warna teks untuk radio button */
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0; /* Sesuaikan posisi agar sejajar dengan teks menu */
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.radio-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.radio-container input:checked ~ .checkmark {
+    background-color: #00ff08; /* Warna hijau saat terpilih */
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radio-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.radio-container .checkmark:after {
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+.content-sign-in {
+    flex-grow: 1; /* Konten utama mengisi sisa ruang */
+    padding: 20px;
+    background-color: #f8f9fa; /* Latar belakang konten */
+    min-height: calc(100vh - 60px); /* Tinggi minimal konten (100vh - tinggi topnav) */
+}
+
+.card {
+    background-color: white;
+    box-shadow: 2px 2px 12px 1px rgba(140,140,140,.3); /* Bayangan lebih halus */
+    padding: 20px; /* Padding yang lebih konsisten */
+    border-radius: 10px; /* Sudut membulat */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px; /* Tinggi minimum kartu */
+}
+
+.cards {
+    max-width: 1200px; /* Lebar maksimum yang lebih besar untuk kartu */
+    margin: 20px auto; /* Margin atas/bawah dan pusatkan */
+    display: grid;
+    grid-gap: 20px; /* Jarak antar kartu */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Sesuaikan minmax */
+}
+
+.cards2 { /* Untuk Gauge */
+    max-width: 900px; /* Lebar maksimum yang lebih besar untuk gauge */
+    margin: 20px auto;
+    display: grid;
+    grid-gap: 30px; /* Jarak antar gauge */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Sesuaikan minmax untuk gauge */
+    justify-items: center; /* Pusatkan item di grid */
+    align-items: center;
+}
+
+.reading {
+    color: #193036;
+    font-size: 1.8rem; /* Ukuran font lebih besar */
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.date-time {
+    font-size: 0.9rem;
+    color: #6c757d; /* Warna abu-abu yang lebih netral */
+}
+
+button {
+    background-color: #049faa; /* Warna tombol default */
+    color: white;
+    padding: 12px 25px; /* Padding lebih baik */
+    margin: 8px 5px; /* Margin horizontal lebih baik */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px; /* Sudut membulat */
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+   opacity: 0.9;
+   transform: translateY(-1px);
+}
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.deletebtn {
+    background-color: #dc3545; /* Warna merah bootstrap untuk delete */
+}
+.deletebtn:hover {
+    background-color: #c82333;
+}
+
+.form-elements-container {
+    padding: 30px; /* Padding lebih besar */
+    width: 300px; /* Lebar form login */
+    margin: 50px auto; /* Pusatkan form dengan margin atas */
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+input[type=text], input[type=password] {
+    width: calc(100% - 24px); /* Sesuaikan lebar dengan padding */
+    padding: 12px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+table {
+    width: 100%;
+    text-align: left; /* Perataan teks ke kiri untuk keterbacaan */
+    font-size: 0.9rem;
+    border-collapse: collapse; /* Menghilangkan spasi antar sel */
+}   
+tr, td {
+    padding: 10px; /* Padding lebih besar untuk sel */
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Warna latar belakang baris genap */
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+th {
+    position: sticky;
+    top: 0;
+    background-color: #50b8b4;
+    color: white;
+    padding: 12px 10px; /* Padding lebih besar untuk header */
+    border-bottom: 2px solid #3498db; /* Garis bawah header */
+    text-transform: uppercase; /* Huruf kapital untuk header */
+    font-size: 0.95rem;
+}
+
+#table-container {
+    max-height: 500px; /* Batasi tinggi tabel agar bisa discroll */
+    overflow-y: auto; /* Aktifkan scroll vertikal */
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Nilai z-index tinggi */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Overlay hitam semi-transparan */
+    padding-top: 50px;
+}
+  
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* Pusatkan modal */
+    border: 1px solid #888;
+    width: 90%; /* Lebar modal */
+    max-width: 400px; /* Batas lebar maksimum */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* Untuk positioning tombol close */
+}
+  
+/* Style the horizontal ruler */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* The Modal Close Button (x) */
+.close {
+    position: absolute;
+    right: 20px; /* Sesuaikan posisi */
+    top: 15px;
+    font-size: 35px; /* Ukuran lebih kecil */
+    font-weight: bold;
+    color: #aaa; /* Warna abu-abu */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #f44336;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Clear floats */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Change styles for cancel button and delete button on extra small screens */
+@media screen and (max-width: 600px) { /* Ubah breakpoint dari 300px ke 600px */
+    .cancelbtn, .deletebtn {
+        width: 100%;
+        margin: 5px 0; /* Margin vertikal untuk tombol penuh lebar */
+    }
+    .allcontainer {
+        flex-direction: column; /* Sidebar di atas konten pada layar kecil */
+    }
+    .sidebar {
+        width: 100%;
+        height: auto; /* Tinggi otomatis pada layar kecil */
+        position: relative; /* Tidak sticky lagi */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .sidebar a {
+        margin: 5px; /* Margin lebih kecil antar tombol */
+    }
+    .sidebar div {
+        text-align: center;
+    }
+    .radio-container {
+        padding-left: 25px;
+        text-align: center;
+    }
+    .checkmark {
+        left: 50%;
+        transform: translateX(-50%); /* Pusatkan checkmark */
+    }
+    .cards, .cards2 {
+        grid-template-columns: 1fr; /* Satu kolom pada layar kecil */
+    }
+    .chart-container {
+        width: 100% !important; /* Pastikan chart mengisi lebar penuh */
+    }
+    #charts-div {
+        width: 100% !important;
+        padding: 0;
+    }
+}
+
+/* Gaya untuk ikon suhu di cards */
+.card p i.fa-thermometer-half {
+    color: #ff0000; /* Warna merah yang Anda inginkan */
+}
+
+.container-charts {
+    display: none;
+}
+
+/* Gaya untuk loading indicator */
+#loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30vh;
+
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+}
+
+#loading-indicator .content {
+    background: white;
+    padding: 25px 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* HTML: <div class="loader"></div> */
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid #00ff08;
+    animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+@keyframes l20-1{
+    0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
+    12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
+    25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
+    50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+    62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+    75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
+    100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+}
+@keyframes l20-2{ 
+    0%    {transform:scaleY(1)  rotate(0deg)}
+    49.99%{transform:scaleY(1)  rotate(135deg)}
+    50%   {transform:scaleY(-1) rotate(0deg)}
+    100%  {transform:scaleY(-1) rotate(-135deg)}
+}
+
+.text {
+    margin: 0;
+    color: #333;
+    font-weight: bold;
+}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ubah scale ke 1.0 untuk responsivitas yang lebih baik -->
+    <title>Dashboard Kualitas Air - Universitas Telkom</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" xintegrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+
+    <!-- Firebase SDKs - Pastikan urutan ini benar -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-gauges/gauge.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    
+</head>
+<body>
+
+    <div class="topnav">
+        <h1>Dashboard Kualitas Air 
+            <img src="images/favicon.png" alt="Water Quality Icon" style="vertical-align: middle; height: 32px;"> 
+        </h1>
+    </div>
+    
+    <form id="login-form" style="display: none;">
+        <div class="form-elements-container">
+            <label for="input-email"><b>Email</b></label>
+            <input type="text" placeholder="Masukkan Username" id="input-email" required>
+
+            <label for="input-password"><b>Password</b></label>
+            <input type="password" placeholder="Masukkan Password" id="input-password" required>
+
+            <button type="submit" id="login-button">Login</button>
+            <p id="error-message" style="color:red;"></p>
+        </div>
+        <br>
+        <br>
+        <br>
+    </form>
+
+    <div class="allcontainer">
+        <!-- sidecontent-sign-in harusnya hanya satu dan membungkus sidebar -->
+        <div id="sidecontent-sign-in" style="display: none;">
+            <div class="sidebar">
+                <!-- Tambahkan data-view ke link navigasi -->
+                <a href="#" data-view="card">Dashboard</a>
+                <a href="#" data-view="gauge">Gauge</a>
+                <a href="#" data-view="chart">Chart</a>
+                <a href="#" data-view="datatable">Log Data</a>
+                
+                <hr style="border-color: #34495e; margin: 10px 0;"> 
+                <div style="padding: 10px 15px; color: #ecf0f1; font-weight: bold;">Pilih Lokasi:</div> 
+                <label class="radio-container">Inlet
+                    <input type="radio" checked="checked" name="location" value="inlet" id="radio-inlet"> <span class="checkmark"></span> </label> 
+                <label class="radio-container">Outlet
+                    <input type="radio" name="location" value="outlet" id="radio-outlet"> <span class="checkmark"></span> </label> 
+                <a href="#" id="logout-link" style="margin-top:auto ; background-color: #aa151a;">Logout</a> 
+            </div>
+        </div>
+        
+        <!-- content-sign-in harusnya hanya satu -->
+        <div class="content-sign-in" id="content-sign-in" style="display: none;">
+            <div style="height:60px;"></div>
+            <!-- Checkbox untuk tampilan sudah tidak diperlukan karena navigasi sidebar -->
+            <!-- <p style="display:none">
+                Cards: <input type="checkbox" id="cards-checkbox" name="cards-checkbox" checked>
+                Gauges: <input type="checkbox" id="gauges-checkbox" name="gauges-checkbox" unchecked>
+                Charts: <input type="checkbox" id="charts-checkbox" name="charts-checkbox" unchecked>
+            </p> -->
+
+            <div id="cards-div">
+                <div class="cards">
+                    <div class="card">
+                        <p><i class="fas fa-thermometer-half" style="color:#ff0000;"></i> SUHU </p>
+                        <!-- Ubah ID agar konsisten dengan index.js -->
+                        <p><span class="reading"><span id="temperatureValue"></span> &deg;C</span></p>
+                    </div>
+                    <div class="card">
+                        <p><i class="fas fa-tint" style="color:#00add6;"></i> TDS </p>
+                        <!-- Ubah ID agar konsisten dengan index.js -->
+                        <p><span class="reading"><span id="turbidityValue"></span> NTU </span></p>
+                    </div>
+                    <div class="card">
+                        <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PH </p>
+                        <!-- Ubah ID agar konsisten dengan index.js -->
+                        <p><span class="reading"><span id="phValue"></span> pH </span></p>
+                    </div>
+                    
+                    <!-- Kartu teks ini mungkin duplikat atau untuk tujuan lain, jika tidak diperlukan bisa dihapus -->
+                    <div class="card">
+                        <p><i class="fas fa-thermometer-half" style="color:#ff0000;"></i> SUHU</p>
+                        <p><span class="reading"><span id="tempText"></span></span></p>
+                    </div>
+                    <div class="card">
+                        <p><i class="fas fa-tint" style="color:#00add6;"></i> TDS </p>
+                        <p><span class="reading"><span id="humText"></span></span></p>
+                    </div>
+                    <div class="card">
+                        <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PH </p>
+                        <p><span class="reading"><span id="presText"></span></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id ="gauges-div" style= "display:none;">
+                <div class="cards2">
+                    <canvas id="gauge-temperature"></canvas>
+                    <canvas id="gauge-humidity"></canvas>
+                    <!-- Menghapus div kosong yang tidak perlu -->
+                    <canvas id="gauge-pressure"></canvas>
+                </div>
+            </div>
+
+            <div id="charts-div" style="display:none; width:100%; max-width: 900px; margin: 0 auto;" > <!-- Sesuaikan lebar chart -->
+                <div>
+                    <!-- charts-range tidak digunakan dalam implementasi ini, bisa dihapus jika tidak ada rencana -->
+                    <!-- <p> Jumlah datapoint yang ditampilkan: <input type="number" id="charts-range"></p> -->
+                </div>
+                <p>Range hari yang ditampilkan: 
+                    <select id="charts-dayrange">
+                        <option selected>Pilih Hari</option>
+                        <option value="0.04">1 Jam</option>
+                        <option value="0.08">2 Jam</option>
+                        <option value="0.5">12 Jam</option>
+                        <option value="1">1 Hari</option> <!-- Default ke 1 Hari -->
+                        <option value="2">2 Hari</option>
+                        <option value="7">7 Hari</option>
+                        <option value="30">30 Hari</option>
+                        <option value="1460"> 4 tahun</option>
+                    </select>
+                </p>
+                <div id="loading-indicator" style="display: none;">
+                    <div class="content">
+                        <div class="spinner" id="loader"></div>
+                        <div class="text" id="loading-text">Memuat data...</div>
+                    </div>
+                </div>
+                <div class="container-charts" id="container-charts">
+                    <div class="cards">
+                        <div class="card">
+                            <p><i class="fas fa-thermometer-half" style="color:#059e8a;"></i> SUHU CHART</p>
+                            <div id="chart-temperature" class="chart-container"></div>
+                        </div>
+                    </div>
+                    <div class="cards">
+                        <div class="card">
+                            <p><i class="fas fa-tint" style="color:#00add6;"></i> TDS CHART</p>
+                            <div id="chart-humidity" class="chart-container"></div>
+                        </div>
+                    </div>
+                    <div class="cards">
+                        <div class="card">
+                            <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PH CHART</p>
+                            <div id="chart-pressure" class="chart-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="datatable-div" style= "display:none;">
+                <p>
+                    <button id="view-data-button">Lihat semua data</button>
+                    <button id="hide-data-button" style= "display:none;">Sembunyikan data</button>
+                    <button id="export-button">Simpan sebagai CSV</button>
+                    <button id="delete-button" class="deletebtn">Hapus data</button>
+                </p>
+                <div id="delete-modal" class="modal" style="display:none"> <!-- Perbaiki typo sytle menjadi style -->
+                    <span onclick = "document.getElementById('delete-modal').style.display='none'" class="close" title="Close Modal">×</span>
+                    <form id= "delete-data-form" class="modal-content"> <!-- Hapus action="/" -->
+                        <div class="container">
+                            <h1>Hapus Data</h1>
+                            <p>Anda yakin akan menghapus semua data dari database untuk lokasi saat ini?</p>
+                            <div class="clearfix">
+                                <button type="button" class="cancelbtn">Batal</button>
+                                <button type="button" class="deletebtn">Hapus</button> <!-- Ubah type ke button, event listener di JS -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            
+                <div class ="cards">
+                    <div class="card" id="table-container" style= "display:none;">
+                        <table id="readings-table">
+                            <tr id="theader">
+                                <th>Timestamp</th>
+                                <th>Temp (ºC)</th>
+                                <th>Turb (NTU)</th>
+                                <th>pH</th>
+                            </tr>
+                            <tbody id="tbody">
+                            </tbody>
+                        </table>
+                        <p><button id="load-data" style= "display:none;">Tampilkan lebih banyak ...</button></p>
+                    </div>
+                </div>
+                <div id="authentication-bar" style="display: none;">
+                    <p><span class ="date-time">Terakhir diperbarui: <span id="lastUpdate"></span></span></p>
+                    <p><span id="authentication-status">Email Perangkat Pengguna</span>
+                        <span id="user-details">USEREMAIL</span>
+                    </p>
+                </div>
+            </div>
+        </div> 
+    </div>
+
+    <!-- Library JavaScript -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/justgage/1.4.0/justgage.min.js"></script>
+
+    <!-- jQuery tidak lagi diperlukan jika semua DOM manipulation menggunakan Vanilla JS -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    
+    <script src="js/xlsx.full.min.js"></script>
+
+    <!-- Skrip kustom Anda -->
+    <script src="js/charts-definition.js"></script>
+    <script src="js/gauges-definition.js"></script>
+    
+    <script src="js/auth.js"></script> 
+    <script src="js/index.js"></script>
+
+    <!-- Skrip inline yang sebelumnya ada di sini dihapus karena logikanya sudah dipindahkan ke index.js -->
+    <!-- Ini untuk memastikan semua logika navigasi dan inisialisasi terpusat di index.js -->
+    <script>
+        // Setelah DOMContentLoaded di index.js, akan memicu switchView('card')
+        // Ini menggantikan logika simulasi klik tombol di index.html
+    </script>
+    </body>
+</html>
