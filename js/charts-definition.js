@@ -66,7 +66,7 @@ function createTemperatureChart() {
       enabled: false // Sembunyikan kredit Highcharts
     },
     rangeSelector: {
-      enabled: false // Aktifkan range selector
+      enabled: true // Aktifkan range selector
     },
     navigator: {
       enabled: true // Aktifkan navigator
