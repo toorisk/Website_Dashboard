@@ -64,7 +64,6 @@ function epochToDateTime(epochTime) {
 function plotValues(chart, timestamp, value) {
     var x = epochToJsDate(timestamp).getTime();
     var y = Number(value);
-    console.log(x, y);
     if (chart && chart.series && chart.series[0]) {
         // addPoint(point, redraw, shift, animation)
         // shift: true akan menghapus poin tertua saat poin baru ditambahkan
@@ -250,7 +249,6 @@ async function processSnapshotForCharts(snapshot, location) {
             if (chartT && chartT.series && chartT.series[0]) chartT.series[0].setData([]);
             if (chartH && chartH.series && chartH.series[0]) chartH.series[0].setData([]);
             if (chartP && chartP.series && chartP.series[0]) chartP.series[0].setData([]);
-            console.log(filteredData);
             filteredData.forEach(entry => {
                 plotValues(chartT, entry.timestamp, entry.temperature);
                 plotValues(chartH, entry.timestamp, entry.turbidity);
